@@ -34,8 +34,7 @@ jobs:
       with:
         push: true
         tags: 675327529402.dkr.ecr.region.amazonaws.com/fc-python-online:latest
-        file: last_chapter/model_creator/Dockerfile
-        context: last_chapter/model_creator
+        file: ./Dockerfile
 
     - name: Deploy to AWS Lambda
       uses: appleboy/lambda-action@master
