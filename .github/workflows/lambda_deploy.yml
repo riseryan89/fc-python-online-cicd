@@ -31,7 +31,6 @@ jobs:
     - name: Build, tag, and push Docker image to Amazon ECR
       uses: docker/build-push-action@v2
       with:
-        platforms: linux/arm64/v8
         push: true
         tags: 675327529402.dkr.ecr.ap-northeast-2.amazonaws.com/fc-python-online:latest
         file: ./Dockerfile
