@@ -69,11 +69,12 @@ def lambda_handler(event, context):
     # S3 클라이언트 생성
     s3_client = boto3.client('s3')
 
-    # 모델 데이터를 직렬화
-    model_data = joblib.dumps(model)
+    # 모델 데이터를 메모리에 직렬화
+    model_data = io.BytesIO()
+    joblib.dump(model, model_data)
+    model_data.seek(0)  # 스트림의 시작 위치로 커서 이동
 
     # S3 버킷에 객체 저장
-    s3_client.put_object(Bucket='fc-python-online', Key='model_joblib.pkl', Body=model_data)
-
+    s3_client.put_object(Bucket='fc-python-online', Key='model_joblib.pkl', Body=model_data.getvalue())
     return {}
 
