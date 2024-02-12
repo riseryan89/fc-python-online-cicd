@@ -23,6 +23,7 @@ def load_and_preprocess_data():
 
     return data
 
+
 def remove_outliers(df, column):
     Q1 = df[column].quantile(0.25)
     Q3 = df[column].quantile(0.75)
