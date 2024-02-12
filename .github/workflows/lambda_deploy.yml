@@ -1,0 +1,40 @@
+name: Lambda Function Deployment with Docker
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'last_chapter/**'
+      - '.github/workflows/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push Docker image to Amazon ECR
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: 675327529402.dkr.ecr.region.amazonaws.com/fc-python-online:latest
+        file: last_chapter/model_creator/Dockerfile
+        context: last_chapter/model_creator
+
+    - name: Deploy to AWS Lambda
+      uses: appleboy/lambda-action@master
+      with:
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        function_name: "fc-python-online-container"
+        aws_region: "ap-northeast-2"
+        image_uri: "675327529402.dkr.ecr.region.amazonaws.com/fc-python-online:latest"
