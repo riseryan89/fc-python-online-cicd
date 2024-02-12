@@ -28,7 +28,7 @@ jobs:
     - name: Login to Amazon ECR
       uses: aws-actions/amazon-ecr-login@v1
     
-      
+
     - name: Build and push
       run: |
         docker buildx create --use
@@ -39,6 +39,6 @@ jobs:
       with:
         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        function_name: "fc-python-online-container"
+        function_name: "fc-python-online-container-c1"
         aws_region: "ap-northeast-2"
         image_uri: "675327529402.dkr.ecr.ap-northeast-2.amazonaws.com/fc-python-online:latest"
