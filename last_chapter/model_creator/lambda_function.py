@@ -1,3 +1,4 @@
+import io
 import joblib
 import boto3
 import pandas as pd
@@ -7,9 +8,14 @@ from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 
 def load_and_preprocess_data():
-    file_s3 = boto3.client('s3')
-    file_s3.download_file('fc-python-online', 'weather_data_updated.csv', 'weather_data_updated.csv')
-    data = pd.read_csv('weather_data_updated.csv')
+    s3_client = boto3.client('s3')
+
+    # S3 객체를 메모리에 읽어오기
+    response = s3_client.get_object(Bucket='fc-python-online', Key='weather_data_updated.csv')
+    response_body = response['Body'].read()
+
+    # 메모리 상의 데이터를 pandas DataFrame으로 변환
+    data = pd.read_csv(io.BytesIO(response_body), encoding='utf-8')
 
 
     # 결측치 처리
@@ -69,3 +75,4 @@ def lambda_handler(event, context):
     s3_client.put_object(Bucket='fc-python-online', Key='model_joblib.pkl', Body=model_data)
 
     return {}
+
